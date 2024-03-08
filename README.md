@@ -62,4 +62,4 @@ systemctl enable --user smb-share.service
 systemctl start --user smb-share.service
 ```
 
-To simplify maintenance you can move the script to the service folder and change the ExecStart and ExecStop paths in the service file to /home/%u/.local/systemd/user/.
+To simplify maintenance you can move the script to the service folder and change the ExecStart and ExecStop paths in the service file to /home/%u/.config/systemd/user/.
