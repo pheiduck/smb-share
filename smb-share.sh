@@ -80,7 +80,7 @@ if ! [[ -z "${USERNAME}" ]]; then
     gio mount "smb://$HOST/$SHARENAME1" < $fname
     gio mount "smb://$HOST/$SHARENAME2" < $fname
 else
-    # mount (if credentials are required you will be prompted
+    # mount if credentials are required you will be prompted
     gio mount "smb://$HOST/$SHARENAME1"
     gio mount "smb://$HOST/$SHARENAME2"
 fi
