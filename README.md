@@ -16,6 +16,7 @@ If does not exist create directory `~/.local/bin` place the script in `~/.local/
 
 ```
 mkdir -p ~/.local/bin
+cd ~/.local/bin
 curl -LO https://raw.githubusercontent.com/pheiduck/smb-share/main/smb-share.sh
 chmod +x ~/.local/bin/smb-share.sh
 ```
