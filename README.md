@@ -10,7 +10,9 @@ The Linux mount utility does not allow for a user to mount a samba share and thi
 
 This script relies on the packages gvfs-smb which will pull the necessary smb-client dependency. The following command will do the trick. If you want the dependencies to be explicitly installed add gvfs and smbclient to the command. The --needed argument will skip syncing packages already present.
 
+```
 sudo pacman -Syu gvfs-smb --needed
+```
 
 If does not exist create directory `~/.local/bin` place the script in `~/.local/bin` make it executable.
 
@@ -21,7 +23,7 @@ curl -LO https://raw.githubusercontent.com/pheiduck/smb-share/main/smb-share.sh
 chmod +x ~/.local/bin/smb-share.sh
 ```
 
-Paste below content and modify the variables to use your samba server and share name.
+Modify the variables to use your samba server and share name.
 
 ```
 # your samba server's hostname or IP address
