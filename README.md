@@ -45,13 +45,13 @@ You can complement this with a systemd user service to automate things even more
 Create the folder
 
 ```
-mkdir -p ~/.local/systemd/user
+mkdir -p ~/.config/systemd/user
 ```
 
 Dowload the service file
 
 ```
-cd ~/.local/systemd/user
+cd ~/.config/systemd/user
 curl -LO https://raw.githubusercontent.com/pheiduck/smb-share/main/smb-share.service
 ```
 
