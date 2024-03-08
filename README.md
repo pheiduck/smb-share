@@ -12,7 +12,7 @@ This script relies on the packages gvfs-smb which will pull the necessary smb-cl
 
 sudo pacman -Syu gvfs-smb --needed
 
-If does not exist create directory `~/.local/bin` place the script in `~/.local/bin`.
+If does not exist create directory `~/.local/bin` place the script in `~/.local/bin` make it executable.
 
 ```
 mkdir -p ~/.local/bin
@@ -34,3 +34,29 @@ USERNAME=
 WORKGROUP=
 PASSWD=
 ```
+
+## user service
+
+You can complement this with a systemd user service to automate things even more.
+
+Create the folder
+
+```
+mkdir -p ~/.local/systemd/user
+```
+
+Dowload the service file
+
+```
+cd ~/.local/systemd/user
+curl -LO https://raw.githubusercontent.com/pheiduck/smb-share/main/smb-share.service
+```
+
+Enable and start the service
+
+```
+systemctl --user enable smb-share.service
+systemctl --user start smb-share.service
+```
+
+To simplify maintenance you can move the script to the service folder and change the ExecStart and ExecStop paths in the service file to /home/%u/.local/systemd/user/.
