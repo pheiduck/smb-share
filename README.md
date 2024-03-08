@@ -12,11 +12,11 @@ This script relies on the packages gvfs-smb which will pull the necessary smb-cl
 
 sudo pacman -Syu gvfs-smb --needed
 
-Create a new script in ~/.local/bin and name it smb-share.sh.
+If does not exist create directories `~/.local/bin` place the script in `~/.local/bin`.
 
 ```
 mkdir -p ~/.local/bin
-touch ~/.local/bin/smb-share.sh
+curl -LO https://raw.githubusercontent.com/pheiduck/smb-share/main/smb-share.sh
 chmod +x ~/.local/bin/smb-share.sh
 ```
 
