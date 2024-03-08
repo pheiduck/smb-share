@@ -5,6 +5,7 @@ Description=GIO mount smb shares
 Type=oneshot
 ExecStart=/home/%u/.local/bin/smb-share.sh
 ExecStop=/home/%u/.local/bin/smb-share.sh -u
+RemainAfterExit=true
 
 [Install]
 WantedBy=multi-user.target
