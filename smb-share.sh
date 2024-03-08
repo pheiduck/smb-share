@@ -73,8 +73,7 @@ fi
 # mount command
 if ! [[ -z "${USERNAME}" ]]; then
     # create credentials file
-    fname="$HOME/.credentials/$USERNAME-$HOST-$SHARENAME1"
-    fname="$HOME/.credentials/$USERNAME-$HOST-$SHARENAME2"
+    fname="$HOME/.credentials/$USERNAME-$HOST"
     echo -e ${USERNAME}'\n'${WORKGROUP}'\n'${PASSWD}'\n' > $fname
     chmod 600 $fname
     # mount and feed the credentials to the mount command
