@@ -12,7 +12,7 @@ This script relies on the packages gvfs-smb which will pull the necessary smb-cl
 
 sudo pacman -Syu gvfs-smb --needed
 
-If does not exist create directories `~/.local/bin` place the script in `~/.local/bin`.
+If does not exist create directory `~/.local/bin` place the script in `~/.local/bin`.
 
 ```
 mkdir -p ~/.local/bin
