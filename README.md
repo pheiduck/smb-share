@@ -58,8 +58,8 @@ curl -LO https://raw.githubusercontent.com/pheiduck/smb-share/main/smb-share.ser
 Enable and start the service
 
 ```
-systemctl --user enable smb-share.service
-systemctl --user start smb-share.service
+systemctl enable --user smb-share.service
+systemctl start --user smb-share.service
 ```
 
 To simplify maintenance you can move the script to the service folder and change the ExecStart and ExecStop paths in the service file to /home/%u/.local/systemd/user/.
