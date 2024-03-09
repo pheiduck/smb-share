@@ -1,8 +1,9 @@
 [Unit]
 Description=GIO mount smb shares
+After=network-online.target
+Wants=network-online.target
 
 [Service]
-Type=oneshot
 ExecStart=/home/%u/.local/bin/smb-share.sh
 ExecStop=/home/%u/.local/bin/smb-share.sh -u
 RemainAfterExit=true
