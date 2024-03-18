@@ -12,6 +12,7 @@ PrivateTmp=yes
 PrivateDevices=yes
 DevicePolicy=closed
 ProtectSystem=strict
+ProtectHostname=yes
 ProtectControlGroups=yes
 ProtectKernelModules=yes
 ProtectKernelTunables=yes
