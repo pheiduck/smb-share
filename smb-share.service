@@ -12,17 +12,16 @@ PrivateTmp=yes
 PrivateDevices=yes
 DevicePolicy=closed
 ProtectSystem=strict
-ProtectHome=false
 ProtectControlGroups=yes
 ProtectKernelModules=yes
 ProtectKernelTunables=yes
+ProtectKernelLogs=yes
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
 RestrictNamespaces=yes
 RestrictRealtime=yes
 RestrictSUIDSGID=yes
 MemoryDenyWriteExecute=yes
 LockPersonality=yes
-RemoveIPC=yes
 
 [Install]
 WantedBy=multi-user.target
