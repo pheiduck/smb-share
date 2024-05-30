@@ -30,7 +30,8 @@ Modify the variables to use your samba server and share name.
 HOST="my-server"
 
 # the share name on the server
-SHARENAME="my-share"
+SHARENAME1="my-share1"
+SHARENAME2="my-share2"
 
 # credentials
 USERNAME=
