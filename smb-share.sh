@@ -1,13 +1,12 @@
 #!/usr/bin/env sh
 #
-#  User script for mounting and unmounting a samba share
+#  User script for mounting and unmounting samba shares
+#  Supports mounting multiple shares with options for credentials
 #
-#  - No fstab entry
-#  - No mount units
-#  - Easy customization
-#  - Using `-u` argument will unmount and remove the symlink
-#  - Option for providing credentials
-#  - Option for a user service to mount at login
+#  - No fstab entry or mount units needed
+#  - Use `-u` argument to unmount and remove the symlink
+#  - Option to provide credentials interactively if not set
+#  - Loop to handle multiple shares
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -32,55 +31,73 @@
 # your samba server's hostname or IP address
 HOST="my-server"
 
-# the share name on the server
-SHARENAME1="my-share1"
-SHARENAME2="my-share2"
+# list of share names on the server (space-separated)
+SHARELIST="my-share1 my-share2 my-share3"  # Add more shares as needed
 
-# credentials
-USERNAME=
-WORKGROUP=
-PASSWD=
+# credentials (optional, leave blank to be prompted)
+USERNAME=""
+WORKGROUP=""
+PASSWD=""
 
 ###########################################
 # don't modify below this line
 #  - unless you know what you are doing
 
 SCRIPTNAME=$(basename "$0")
-VERSION="0.3"
+VERSION="0.4"
 
-# check argument $1
+# Check if the user wants to unmount
 if [[ "$1" == "-u" ]]; then
-    # unmount share
-    gio mount -u "smb://$HOST/$SHARENAME1"
-    gio mount -u "smb://$HOST/$SHARENAME2"
-    exit
+    echo ":: Unmounting shares from $HOST..."
+    for SHARE in $SHARELIST; do
+        gio mount -u "smb://$HOST/$SHARE" && echo "Unmounted $SHARE" || echo "Failed to unmount $SHARE"
+    done
+    exit 0
+elif [[ "$1" == "--dry-run" ]]; then
+    echo ":: Dry run mode: displaying shares without mounting"
+    for SHARE in $SHARELIST; do
+        echo "Would mount: smb://$HOST/$SHARE"
+    done
+    exit 0
 elif [[ $1 != "" ]]; then
     echo ":: $SCRIPTNAME v$VERSION"
-    echo "==> invalid argument: $1"
+    echo "==> Invalid argument: $1"
     echo "Usage: "
-    echo "  mount SMB : $SCRIPTNAME"
-    echo "  umount SMB: $SCRIPTNAME -u"
+    echo "  Mount SMB : $SCRIPTNAME"
+    echo "  Unmount SMB: $SCRIPTNAME -u"
+    echo "  Dry Run: $SCRIPTNAME --dry-run"
     exit 1
 fi
 
-# Create credentials folder
-if ! [ -d "$HOME/.credentials" ]; then
-    mkdir -p $HOME/.credentials
-    chmod 700 $HOME/.credentials
+# Prompt for credentials if not provided
+if [[ -z "${USERNAME}" ]]; then
+    read -p "Enter Samba Username: " USERNAME
 fi
 
-# ----------------------------------------------------------------
-# mount command
-if ! [[ -z "${USERNAME}" ]]; then
-    # create credentials file
-    fname="$HOME/.credentials/$USERNAME-$HOST"
-    echo -e ${USERNAME}'\n'${WORKGROUP}'\n'${PASSWD}'\n' > $fname
-    chmod 600 $fname
-    # mount and feed the credentials to the mount command
-    gio mount "smb://$HOST/$SHARENAME1" < $fname
-    gio mount "smb://$HOST/$SHARENAME2" < $fname
-else
-    # mount if credentials are required you will be prompted
-    gio mount "smb://$HOST/$SHARENAME1"
-    gio mount "smb://$HOST/$SHARENAME2"
+if [[ -z "${PASSWD}" ]]; then
+    read -sp "Enter Samba Password: " PASSWD
+    echo ""
 fi
+
+if [[ -z "${WORKGROUP}" ]]; then
+    read -p "Enter Workgroup (default: WORKGROUP): " WORKGROUP
+    WORKGROUP=${WORKGROUP:-WORKGROUP}
+fi
+
+# Create credentials folder if not exists
+if ! [ -d "$HOME/.credentials" ]; then
+    mkdir -p "$HOME/.credentials"
+    chmod 700 "$HOME/.credentials"
+fi
+
+# Create credentials file
+CREDENTIALS_FILE="$HOME/.credentials/$USERNAME-$HOST"
+echo -e "${USERNAME}\n${WORKGROUP}\n${PASSWD}" > "$CREDENTIALS_FILE"
+chmod 600 "$CREDENTIALS_FILE"
+
+# ----------------------------------------------------------------
+# Loop through shares and mount them
+echo ":: Mounting shares from $HOST..."
+for SHARE in $SHARELIST; do
+    gio mount "smb://$HOST/$SHARE" < "$CREDENTIALS_FILE" && echo "Mounted $SHARE" || echo "Failed to mount $SHARE"
+done
