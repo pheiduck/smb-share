@@ -29,14 +29,13 @@ Modify the variables to use your samba server and share name.
 # your samba server's hostname or IP address
 HOST="my-server"
 
-# the share name on the server
-SHARENAME1="my-share1"
-SHARENAME2="my-share2"
+# list of share names on the server
+SHARELIST="my-share1 my-share2"
 
-# credentials
-USERNAME=
-WORKGROUP=
-PASSWD=
+# optional credentials
+USERNAME=""
+WORKGROUP=""
+PASSWD=""
 ```
 
 ## user service
