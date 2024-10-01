@@ -48,24 +48,28 @@ VERSION="0.4"
 
 # Check if the user wants to unmount
 if [[ "$1" == "-u" ]]; then
-    echo ":: Unmounting shares from $HOST..."
+    printf ":: Unmounting shares from %s...\n" "$HOST"
     for SHARE in $SHARELIST; do
-        gio mount -u "smb://$HOST/$SHARE" && echo "Unmounted $SHARE" || echo "Failed to unmount $SHARE"
+        if gio mount -u "smb://$HOST/$SHARE"; then
+            printf "Unmounted %s\n" "$SHARE"
+        else
+            printf "Failed to unmount %s\n" "$SHARE"
+        fi
     done
     exit 0
 elif [[ "$1" == "--dry-run" ]]; then
-    echo ":: Dry run mode: displaying shares without mounting"
+    printf ":: Dry run mode: displaying shares without mounting\n"
     for SHARE in $SHARELIST; do
-        echo "Would mount: smb://$HOST/$SHARE"
+        printf "Would mount: smb://%s/%s\n" "$HOST" "$SHARE"
     done
     exit 0
 elif [[ $1 != "" ]]; then
-    echo ":: $SCRIPTNAME v$VERSION"
-    echo "==> Invalid argument: $1"
-    echo "Usage: "
-    echo "  Mount SMB : $SCRIPTNAME"
-    echo "  Unmount SMB: $SCRIPTNAME -u"
-    echo "  Dry Run: $SCRIPTNAME --dry-run"
+    printf ":: %s v%s\n" "$SCRIPTNAME" "$VERSION"
+    printf "==> Invalid argument: %s\n" "$1"
+    printf "Usage: \n"
+    printf "  Mount SMB : %s\n" "$SCRIPTNAME"
+    printf "  Unmount SMB: %s -u\n" "$SCRIPTNAME"
+    printf "  Dry Run: %s --dry-run\n" "$SCRIPTNAME"
     exit 1
 fi
 
@@ -92,12 +96,16 @@ fi
 
 # Create credentials file
 CREDENTIALS_FILE="$HOME/.credentials/$USERNAME-$HOST"
-echo -e "${USERNAME}\n${WORKGROUP}\n${PASSWD}" > "$CREDENTIALS_FILE"
+printf "%s\n%s\n%s" "${USERNAME}" "${WORKGROUP}" "${PASSWD}" > "$CREDENTIALS_FILE"
 chmod 600 "$CREDENTIALS_FILE"
 
 # ----------------------------------------------------------------
 # Loop through shares and mount them
-echo ":: Mounting shares from $HOST..."
+printf ":: Mounting shares from %s...\n" "$HOST"
 for SHARE in $SHARELIST; do
-    gio mount "smb://$HOST/$SHARE" < "$CREDENTIALS_FILE" && echo "Mounted $SHARE" || echo "Failed to mount $SHARE"
+    if gio mount "smb://$HOST/$SHARE" < "$CREDENTIALS_FILE"; then
+        printf "Mounted %s\n" "$SHARE"
+    else
+        printf "Failed to mount %s\n" "$SHARE"
+    fi
 done
