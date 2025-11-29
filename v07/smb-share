@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+#
+# Mount/Unmount multiple CIFS (SMB) shares with credentials
+# Uses sudo mount -t cifs with x-gvfs-show
+#
+
+HOST=""
+SHARELIST=""
+
+USERNAME=""
+WORKGROUP=""
+PASSWD=""
+
+MOUNT_BASE="/mnt"
+
+# To avoid readonly UID/GID
+MOUNT_UID=1000
+MOUNT_GID=1000
+
+SCRIPTNAME=$(basename "$0")
+VERSION="0.7"
+
+# Check arguments
+if [[ "$1" == "-u" ]]; then
+    printf ":: Unmounting shares from %s...\n" "$HOST"
+    for SHARE in $SHARELIST; do
+        MOUNTPOINT="$MOUNT_BASE/$SHARE"
+        if sudo umount "$MOUNTPOINT"; then
+            printf "Unmounted %s\n" "$SHARE"
+        else
+            printf "Failed to unmount %s (maybe not mounted)\n" "$SHARE"
+        fi
+    done
+    exit 0
+elif [[ "$1" == "--dry-run" ]]; then
+    printf ":: Dry run: shares to be mounted:\n"
+    for SHARE in $SHARELIST; do
+        printf "Would mount //%s/%s at %s/%s\n" "$HOST" "$SHARE" "$MOUNT_BASE" "$SHARE"
+    done
+    exit 0
+elif [[ -n "$1" ]]; then
+    printf "%s v%s\n" "$SCRIPTNAME" "$VERSION"
+    printf "Invalid argument: %s\n" "$1"
+    printf "Usage:\n"
+    printf "  Mount shares: %s\n" "$SCRIPTNAME"
+    printf "  Unmount shares: %s -u\n" "$SCRIPTNAME"
+    printf "  Dry run: %s --dry-run\n" "$SCRIPTNAME"
+    exit 1
+fi
+
+# Prompt for missing credentials
+[[ -z "$USERNAME" ]] && read -p "Enter Samba Username: " USERNAME
+[[ -z "$PASSWD" ]] && read -sp "Enter Samba Password: " PASSWD && printf "\n"
+[[ -z "$WORKGROUP" ]] && read -p "Enter Workgroup (default: WORKGROUP): " WORKGROUP && WORKGROUP=${WORKGROUP:-WORKGROUP}
+
+# Mount shares
+printf ":: Mounting shares from %s...\n" "$HOST"
+for SHARE in $SHARELIST; do
+    MOUNTPOINT="$MOUNT_BASE/$SHARE"
+    
+    [[ ! -d "$MOUNTPOINT" ]] && sudo mkdir -p "$MOUNTPOINT"
+
+    if sudo mount -t cifs "//$HOST/$SHARE" "$MOUNTPOINT" \
+        -o username="$USERNAME",password="$PASSWD",workgroup="$WORKGROUP",uid="$MOUNT_UID",gid="$MOUNT_GID",x-gvfs-show; then
+        printf "Mounted %s at %s (visible in file manager)\n" "$SHARE" "$MOUNTPOINT"
+    else
+        printf "Failed to mount %s\n" "$SHARE"
+    fi
+done
+
