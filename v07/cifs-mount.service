@@ -5,8 +5,8 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/pheiduck/.local/bin/smb-share
-ExecStop=/home/pheiduck/.local/bin/smb-share -u
+ExecStart=/home/username/.local/bin/smb-share
+ExecStop=/home/username/.local/bin/smb-share -u
 RemainAfterExit=yes
 
 [Install]
