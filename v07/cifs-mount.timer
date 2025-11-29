@@ -1,0 +1,10 @@
+[Unit]
+Description=Delay execution of CIFS mount script by 2.5 minutes after boot
+
+[Timer]
+OnBootSec=150
+Persistent=true
+Unit=cifs-mount.service
+
+[Install]
+WantedBy=timers.target
