@@ -1,0 +1,13 @@
+[Unit]
+Description=Mount CIFS Shares
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/pheiduck/.local/bin/smb-share
+ExecStop=/home/pheiduck/.local/bin/smb-share -u
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
