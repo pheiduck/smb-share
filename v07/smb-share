@@ -61,7 +61,7 @@ for SHARE in $SHARELIST; do
     [[ ! -d "$MOUNTPOINT" ]] && sudo mkdir -p "$MOUNTPOINT"
 
     if sudo mount -t cifs "//$HOST/$SHARE" "$MOUNTPOINT" \
-        -o username="$USERNAME",password="$PASSWD",workgroup="$WORKGROUP",uid="$MOUNT_UID",gid="$MOUNT_GID",x-gvfs-show; then
+        -o username="$USERNAME",password="$PASSWD",workgroup="$WORKGROUP",uid="$MOUNT_UID",gid="$MOUNT_GID",vers=3.0,x-gvfs-show; then
         printf "Mounted %s at %s (visible in file manager)\n" "$SHARE" "$MOUNTPOINT"
     else
         printf "Failed to mount %s\n" "$SHARE"
