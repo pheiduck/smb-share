@@ -46,11 +46,6 @@ elif [[ -n "$1" ]]; then
     exit 1
 fi
 
-# Prompt for missing credentials
-[[ -z "$USERNAME" ]] && read -p "Enter Samba Username: " USERNAME
-[[ -z "$PASSWD" ]] && read -sp "Enter Samba Password: " PASSWD && printf "\n"
-[[ -z "$WORKGROUP" ]] && read -p "Enter Workgroup (default: WORKGROUP): " WORKGROUP && WORKGROUP=${WORKGROUP:-WORKGROUP}
-
 # Mount shares
 printf ":: Mounting shares from %s...\n" "$HOST"
 for SHARE in $SHARELIST; do
