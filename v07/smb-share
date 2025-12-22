@@ -7,9 +7,7 @@
 HOST=""
 SHARELIST=""
 
-USERNAME=""
-WORKGROUP=""
-PASSWD=""
+CREDENTIALS="/home/your_username/.mount-credentials/myshare"
 
 MOUNT_BASE="/mnt"
 
@@ -57,14 +55,13 @@ fi
 printf ":: Mounting shares from %s...\n" "$HOST"
 for SHARE in $SHARELIST; do
     MOUNTPOINT="$MOUNT_BASE/$SHARE"
-    
+
     [[ ! -d "$MOUNTPOINT" ]] && sudo mkdir -p "$MOUNTPOINT"
 
     if sudo mount -t cifs "//$HOST/$SHARE" "$MOUNTPOINT" \
-        -o username="$USERNAME",password="$PASSWD",workgroup="$WORKGROUP",uid="$MOUNT_UID",gid="$MOUNT_GID",vers=default,x-gvfs-show; then
+        -o credentials="$CREDENTIALS",uid="$MOUNT_UID",gid="$MOUNT_GID",vers=default,x-gvfs-show; then
         printf "Mounted %s at %s (visible in file manager)\n" "$SHARE" "$MOUNTPOINT"
     else
         printf "Failed to mount %s\n" "$SHARE"
     fi
 done
-
