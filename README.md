@@ -1,4 +1,4 @@
-[ref] [[root tip] [Utility Script] GIO mount samba share ](https://forum.manjaro.org/t/root-tip-utility-script-gio-mount-samba-share)
+[ref] [[root tip] [Utility Script] GIO mount samba share ](https://mjr.sh/4BB)
 
 # Utility to mount samba share as user
 
